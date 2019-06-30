@@ -1,23 +1,27 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:kinker/auth.dart';
 import 'CardList.dart';
-import 'signIn.dart';
+import 'profile.dart';
 
 CardList blah = new CardList();
 
 
 class Kinker extends StatefulWidget {
-  final FirebaseUser user;
-
-  const Kinker({Key key, this.user}) : super(key: key);
-
 
   @override
   State<StatefulWidget> createState() {
     return new _KinkerState();
   }
+
+/*   void _signOut() async{
+    try {
+      await auth.signOut();
+    } catch (e) {
+      print(e);
+    }
+  } */
 
 }
 
@@ -45,7 +49,9 @@ class _KinkerState extends State<Kinker> {
               ),
               FloatingActionButton(
                 heroTag: "profile",
-                onPressed: () {},
+                onPressed: (){
+                  Navigator.push(context, new MaterialPageRoute(builder: (context) => profile()));
+                },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(60),
                   child: Image(
@@ -58,39 +64,38 @@ class _KinkerState extends State<Kinker> {
               )
           ]
           ),
-          body:new Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-             // blah,
-                new Container(
-                color: Colors.black,
-                child: new Center(
-                  child: new Row(
-                    children: <Widget>[
-                      Spacer(),
-                      new FloatingActionButton(
-                        heroTag:"dislike",
-                        child: Icon(Icons.clear),
-                        backgroundColor: Colors.red,
-                        onPressed: (){
+          body: SingleChildScrollView(
+            child: new Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                blah,
+                  new Container(
+                  color: Colors.black,
+                  child: new Center(
+                    child: new Row(
+                      children: <Widget>[
+                        Spacer(),
+                        new FloatingActionButton(
+                          heroTag:"dislike",
+                          child: Icon(Icons.clear),
+                          backgroundColor: Colors.red,
+                          onPressed: (){},
+                        ),
+                        Spacer(),
+                        new FloatingActionButton(
+                          heroTag:"like",
+                          child: Icon(Icons.favorite),
+                          backgroundColor: Colors.deepPurple,
+                          onPressed: (){
 
-                        },
-                      ),
-                      Spacer(),
-                      new FloatingActionButton(
-                        heroTag:"like",
-                        child: Icon(Icons.favorite),
-                        backgroundColor: Colors.deepPurple,
-                        onPressed: (){
-
-                        },
-                      ),
-                      Spacer(),
-                      
-                    ],
-                ),)
-              ) 
-            ]),
+                          },
+                        ),
+                        Spacer(),
+                        
+                      ],
+                  ),)
+                ) 
+            ])),
          backgroundColor: Colors.black,
             )
         )
@@ -123,6 +128,4 @@ openMessages() {
   print('HI!');
 }
 
-openProfile() {
-  print('Profile');
-}
+  

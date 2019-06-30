@@ -1,49 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:kinker/homePage.dart';
 import 'package:kinker/signIn.dart';
-import 'auth.dart';
+import 'package:kinker/auth.dart';
+import 'package:kinker/auth_provider.dart';
 
-class RootPage extends StatefulWidget {
-  RootPage({this.auth});
-  final BaseAuth auth;
-
-  @override
-  _RootPageState createState() => _RootPageState();
-}
-
-enum AuthStatus{
-  notSignedIn,
-  signedIn
-}
-
-class _RootPageState extends State<RootPage> {
-  AuthStatus _authStatus = AuthStatus.notSignedIn;
-
-  initState(){
-    super.initState();
-    widget.auth.currentUser().then((userId){
-      setState((){
-        _authStatus = userId == null ? AuthStatus.notSignedIn : AuthStatus.signedIn;
-      });
-    });
-  }
-
-  void _signedIn(){
-    setState(() {
-     _authStatus = AuthStatus.signedIn; 
-    });
-  }
+class RootPage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    switch(_authStatus){
-      case AuthStatus.notSignedIn:
-        return new signIn(
-          auth: widget.auth,
-          onSignedIn: _signedIn,
-          );
-      case AuthStatus.signedIn:
-        return new Kinker();
-    }
+    final BaseAuth auth = AuthProvider.of(context).auth;
+    return StreamBuilder<String>(
+      stream: auth.onAuthStateChanged,
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot){
+        if (snapshot.connectionState == ConnectionState.active){
+          final bool isLoggedIn = snapshot.hasData;
+          return isLoggedIn ? Kinker() : signIn();
+        }
+        return _buildWaitingScreen();
+      }
+    );
   }
+}
+
+Widget _buildWaitingScreen(){
+  return new Scaffold(
+    body: new Container(
+      alignment: Alignment.center,
+      child: CircularProgressIndicator()
+    ),
+  );
 }

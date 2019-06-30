@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'CardList.dart';
-import 'main.dart';
 
 class MatchCard extends StatefulWidget {
   final String name;

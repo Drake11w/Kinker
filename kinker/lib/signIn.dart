@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'auth.dart';
-import 'main.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:async';
+import 'package:kinker/auth.dart';
+import 'package:kinker/auth_provider.dart';
+import 'package:flutter/services.dart';
+import 'common_widgets/platform_alert_dialog.dart';
+
 
 class signIn extends StatefulWidget {
-  signIn({this.auth, this.onSignedIn});
-  final BaseAuth auth;
-  final VoidCallback onSignedIn;
 
   @override
   _signInState createState() => new _signInState();
@@ -34,12 +32,14 @@ class _signInState extends State<signIn> {
             title: Text('Sign In'),
             backgroundColor: Colors.deepPurple,
           ),
-          body: new Form(
+          body: SingleChildScrollView(
+          child: new Form(
             key: _formKey,
             child: new Column(
               children: buildInputs() + buildSubmitButtons()
             ),
           ),
+        )
           //backgroundColor: Colors.black
         )
       )
@@ -114,17 +114,17 @@ class _signInState extends State<signIn> {
   void validateAndSubmit() async{
     if (validateAndSave()){
       try {
+        final BaseAuth auth = AuthProvider.of(context).auth;
         if (_formType == FormType.login){
-          String userId = await widget.auth.signInWithEmailAndPassword(_email, _password);
+          String userId = await auth.signInWithEmailAndPassword(_email, _password);
           print ('logged in user:' + userId);
         }
         else{
-          String userId = await widget.auth.createUserWithEmailAndPassword(_email, _password);
+          String userId = await auth.createUserWithEmailAndPassword(_email, _password);
           print ('created in user:' + userId);
         }
-        widget.onSignedIn();
-      } catch (e) {
-        print(e.message());
+      } on PlatformException catch (e) {
+        _showErrorMessage(context, e.message);
       }
     }
   }
@@ -143,4 +143,12 @@ class _signInState extends State<signIn> {
     });
   }
 
+}
+
+void _showErrorMessage(BuildContext context, message){
+  PlatformAlertDialog(
+    title: "Login error",
+    content: message,
+    confirmText: "Okay",
+  ).show(context);
 }
