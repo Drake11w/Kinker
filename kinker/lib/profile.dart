@@ -4,9 +4,6 @@ import 'package:kinker/auth_provider.dart';
 import 'package:kinker/common_widgets/platform_alert_dialog.dart';
 
 class profile extends StatefulWidget {
-/*   profile({this.auth, this.onSignOut});
-  final VoidCallback onSignOut;
-  final BaseAuth auth; */
 
   @override
   _profileState createState() => _profileState();
@@ -46,7 +43,6 @@ class _profileState extends State<profile> {
     try {
       bool confirmation = await _logOutDialog(context);
       if (confirmation == true){
-        print('signing out');
         final BaseAuth auth = AuthProvider.of(context).auth;
         await auth.signOut();
       }
@@ -61,7 +57,6 @@ Future<bool> _logOutDialog(BuildContext context) async{
     cancelText: 'Cancel',
     confirmText: 'Logout',
   ).show(context);
-  print(didLogout);
   return didLogout;
   }
 }

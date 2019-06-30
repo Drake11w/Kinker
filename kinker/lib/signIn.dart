@@ -40,7 +40,6 @@ class _signInState extends State<signIn> {
             ),
           ),
         )
-          //backgroundColor: Colors.black
         )
       )
     );
@@ -142,7 +141,6 @@ class _signInState extends State<signIn> {
      _formType = FormType.login; 
     });
   }
-
 }
 
 void _showErrorMessage(BuildContext context, message){

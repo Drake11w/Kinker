@@ -41,47 +41,4 @@ class _CardListState extends State<CardList> {
 
 
 }
- /* List<Widget> _getMatchCard() { 
-    List<MatchCard> cards = new List(); 
-    cards.add(MatchCard()); 
-    cards.add(MatchCard()); 
-    cards.add(MatchCard()); 
-    List<Widget> cardList = new List(); 
-   for (int x = 0; x < 3; x++) { 
-     cardList.add(Positioned( 
-       top: cards[x].margin, 
-       child: Draggable( 
-          onDragEnd: (drag){ 
-            _removeCard(x); 
-          }, 
-       childWhenDragging: Container(), 
-       feedback: Card( 
-         elevation: 12, 
-         //color: Color.fromARGB(255, cards[x].redColor, cards[x].greenColor, cards[x].blueColor), 
-         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), 
-         child: Container( 
-            width: 240, 
-            height: 300, 
-            ), 
-          ), 
-       child: Card( 
-         elevation: 12, 
-         //color: Color.fromARGB(255, cards[x].redColor, cards[x].greenColor, cards[x].blueColor), 
-         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), 
-         child: Container( 
-           width: 240, 
-           height: 300, 
-          ), 
-         ), 
-       ), 
-     )
-   ); 
-
-  List<Widget> getcardList(){
-    return cardList;
-  }
-
-  } 
-  return cardList; 
-} 
- */
+ 

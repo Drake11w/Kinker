@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:kinker/auth.dart';
 import 'CardList.dart';
 import 'profile.dart';
 
@@ -14,15 +13,6 @@ class Kinker extends StatefulWidget {
   State<StatefulWidget> createState() {
     return new _KinkerState();
   }
-
-/*   void _signOut() async{
-    try {
-      await auth.signOut();
-    } catch (e) {
-      print(e);
-    }
-  } */
-
 }
 
 class _KinkerState extends State<Kinker> {
@@ -122,10 +112,6 @@ class Messages extends StatelessWidget {
       )
   );
   }
-}
-
-openMessages() {
-  print('HI!');
 }
 
   
