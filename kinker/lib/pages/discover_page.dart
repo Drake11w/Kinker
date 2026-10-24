@@ -104,6 +104,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
         onRetry: _load,
       );
     }
+    final scheme = Theme.of(context).colorScheme;
     return Column(
       children: [
         Expanded(
@@ -124,16 +125,16 @@ class _DiscoverPageState extends State<DiscoverPage> {
               FloatingActionButton.large(
                 heroTag: 'dislike',
                 tooltip: 'Pass',
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.red,
+                backgroundColor: scheme.surfaceContainerHighest,
+                foregroundColor: scheme.error,
                 onPressed: _deck.dislike,
                 child: const Icon(Icons.close, size: 40),
               ),
               FloatingActionButton.large(
                 heroTag: 'like',
                 tooltip: 'Like',
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                foregroundColor: Colors.white,
+                backgroundColor: scheme.primary,
+                foregroundColor: scheme.onPrimary,
                 onPressed: _deck.like,
                 child: const Icon(Icons.favorite, size: 40),
               ),

@@ -52,9 +52,53 @@ class ProfilePage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Expanded(child: MatchCard(profile: me)),
+            const SizedBox(height: 16),
+            const _AppearancePicker(),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _AppearancePicker extends StatelessWidget {
+  const _AppearancePicker();
+
+  @override
+  Widget build(BuildContext context) {
+    final settings = Services.of(context).themeSettings;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text('Appearance', style: Theme.of(context).textTheme.titleSmall),
+        const SizedBox(height: 8),
+        ValueListenableBuilder<ThemeMode>(
+          valueListenable: settings,
+          builder: (context, mode, _) => SegmentedButton<ThemeMode>(
+            showSelectedIcon: false,
+            segments: const [
+              ButtonSegment(
+                value: ThemeMode.system,
+                icon: Icon(Icons.brightness_auto),
+                label: Text('System'),
+              ),
+              ButtonSegment(
+                value: ThemeMode.light,
+                icon: Icon(Icons.light_mode),
+                label: Text('Light'),
+              ),
+              ButtonSegment(
+                value: ThemeMode.dark,
+                icon: Icon(Icons.dark_mode),
+                label: Text('Dark'),
+              ),
+            ],
+            selected: {mode},
+            onSelectionChanged: (selection) =>
+                settings.setMode(selection.single),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -6,6 +6,7 @@ import 'app.dart';
 import 'services/auth.dart';
 import 'services/firestore_repository.dart';
 import 'services/memory_repository.dart';
+import 'services/theme_settings.dart';
 
 /// Pass `--dart-define=KINKER_DEMO=true` to skip Firebase entirely.
 const bool forceDemo = bool.fromEnvironment('KINKER_DEMO');
@@ -16,6 +17,7 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  final themeSettings = await ThemeSettings.load();
 
   if (!forceDemo) {
     try {
@@ -25,6 +27,7 @@ Future<void> main() async {
       runApp(KinkerApp(
         auth: FirebaseAuthService(),
         repository: FirestoreRepository(),
+        themeSettings: themeSettings,
       ));
       return;
     } catch (e) {
@@ -35,6 +38,7 @@ Future<void> main() async {
   runApp(KinkerApp(
     auth: DemoAuth(),
     repository: MemoryRepository.seeded(),
+    themeSettings: themeSettings,
     isDemo: true,
   ));
 }

@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import 'auth.dart';
 import 'repository.dart';
+import 'theme_settings.dart';
 
 /// Makes the app's services available to the widget tree.
 class Services extends InheritedWidget {
@@ -9,12 +10,14 @@ class Services extends InheritedWidget {
     super.key,
     required this.auth,
     required this.repository,
+    required this.themeSettings,
     this.isDemo = false,
     required super.child,
   });
 
   final BaseAuth auth;
   final Repository repository;
+  final ThemeSettings themeSettings;
 
   /// True when running against local in-memory data instead of Firebase.
   final bool isDemo;
@@ -29,5 +32,6 @@ class Services extends InheritedWidget {
   bool updateShouldNotify(Services oldWidget) =>
       auth != oldWidget.auth ||
       repository != oldWidget.repository ||
+      themeSettings != oldWidget.themeSettings ||
       isDemo != oldWidget.isDemo;
 }

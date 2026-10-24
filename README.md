@@ -7,6 +7,7 @@ A swipe-to-match social app built with Flutter and Firebase.
 - **Discover**: drag cards right to like or left to pass, or use the buttons.
 - **Match**: when two people like each other, both get a match and an "It's a match!" prompt.
 - **Chat**: real-time messaging with each match, plus unmatch.
+- **Light and dark mode**: follows the system by default; override it under Profile → Appearance (saved on the device).
 
 ## Running it
 
