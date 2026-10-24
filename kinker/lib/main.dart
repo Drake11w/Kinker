@@ -1,34 +1,40 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:kinker/auth_provider.dart';
-import 'package:kinker/rootPage.dart';
-import 'auth.dart';
-import 'package:kinker/auth.dart';
 import 'package:flutter/services.dart';
 
+import 'app.dart';
+import 'services/auth.dart';
+import 'services/firestore_repository.dart';
+import 'services/memory_repository.dart';
 
-void main(){
-  runApp(new MyApp());
-}
+/// Pass `--dart-define=KINKER_DEMO=true` to skip Firebase entirely.
+const bool forceDemo = bool.fromEnvironment('KINKER_DEMO');
 
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
-class MyApp extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ]);
-    return AuthProvider(
-      auth: Auth(),
-      child: new MaterialApp(
-          title: 'Kinker',
-          theme: new ThemeData(
-            primarySwatch: Colors.deepPurple
-          ),
-          home: new RootPage()
-    )
-    );
+  if (!forceDemo) {
+    try {
+      // Uses the native config files (google-services.json /
+      // GoogleService-Info.plist). See README for setup.
+      await Firebase.initializeApp();
+      runApp(KinkerApp(
+        auth: FirebaseAuthService(),
+        repository: FirestoreRepository(),
+      ));
+      return;
+    } catch (e) {
+      debugPrint('Firebase unavailable, starting in demo mode: $e');
+    }
   }
+
+  runApp(KinkerApp(
+    auth: DemoAuth(),
+    repository: MemoryRepository.seeded(),
+    isDemo: true,
+  ));
 }

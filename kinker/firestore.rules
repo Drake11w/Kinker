@@ -1,0 +1,68 @@
+rules_version = '2';
+
+// Security rules for the layout described in lib/services/firestore_repository.dart.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isMember(matchData) {
+      return signedIn() && request.auth.uid in matchData.userIds;
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.age is int
+        && request.resource.data.age >= 18;
+      allow delete: if signedIn() && request.auth.uid == uid;
+
+      // A user's own swipes. The swiped-on user may read the one swipe about
+      // them so that a mutual like can be detected.
+      match /swipes/{targetUid} {
+        allow read: if signedIn()
+          && (request.auth.uid == uid || request.auth.uid == targetUid);
+        allow write: if signedIn() && request.auth.uid == uid
+          && request.resource.data.liked is bool;
+      }
+    }
+
+    match /matches/{matchId} {
+      // `resource == null` lets the creating transaction check for an
+      // existing match before writing one.
+      allow read: if signedIn() && (resource == null || isMember(resource.data));
+
+      // A match can only be created by one of its members, with the
+      // deterministic id, after the other member has liked them.
+      allow create: if isMember(request.resource.data)
+        && request.resource.data.userIds.size() == 2
+        && matchId == request.resource.data.userIds[0] + '_' + request.resource.data.userIds[1]
+        && get(/databases/$(database)/documents/users/$(
+             request.resource.data.userIds[0] == request.auth.uid
+               ? request.resource.data.userIds[1]
+               : request.resource.data.userIds[0]
+           )/swipes/$(request.auth.uid)).data.liked == true;
+
+      allow update: if isMember(resource.data)
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['lastMessage', 'updatedAt']);
+      allow delete: if isMember(resource.data);
+
+      match /messages/{messageId} {
+        function parentMatch() {
+          return get(/databases/$(database)/documents/matches/$(matchId)).data;
+        }
+
+        allow read: if isMember(parentMatch());
+        allow create: if isMember(parentMatch())
+          && request.resource.data.senderId == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() > 0
+          && request.resource.data.text.size() <= 2000;
+      }
+    }
+  }
+}

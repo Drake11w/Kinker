@@ -1,12 +1,11 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'platform_widget.dart';
 
 class PlatformSwitch extends PlatformWidget<CupertinoSwitch, Switch> {
-  PlatformSwitch({Key key, this.value, this.onChanged}) : super(key: key);
+  const PlatformSwitch({super.key, required this.value, this.onChanged});
   final bool value;
-  final ValueChanged<bool> onChanged;
+  final ValueChanged<bool>? onChanged;
 
   @override
   CupertinoSwitch buildCupertinoWidget(BuildContext context) {

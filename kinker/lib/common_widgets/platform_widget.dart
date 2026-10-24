@@ -1,20 +1,22 @@
-import 'dart:io';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Base class to be extended by all platform aware widgets
 abstract class PlatformWidget<C extends Widget, M extends Widget>
     extends StatelessWidget {
-  PlatformWidget({Key key}) : super(key: key);
+  const PlatformWidget({super.key});
 
   C buildCupertinoWidget(BuildContext context);
   M buildMaterialWidget(BuildContext context);
 
+  static bool isCupertino(BuildContext context) {
+    final platform = Theme.of(context).platform;
+    return platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (Platform.isIOS) {
-      // Use Cupertino on iOS
+    if (isCupertino(context)) {
+      // Use Cupertino on Apple platforms
       return buildCupertinoWidget(context);
     }
     // Use Material design on Android and other platforms

@@ -1,11 +1,10 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'platform_app_bar.dart';
 import 'platform_widget.dart';
 
 class PlatformScaffold extends PlatformWidget<CupertinoPageScaffold, Scaffold> {
-  PlatformScaffold({this.appBar, this.body});
+  const PlatformScaffold({super.key, required this.appBar, required this.body});
   final PlatformAppBar appBar;
   final Widget body;
 

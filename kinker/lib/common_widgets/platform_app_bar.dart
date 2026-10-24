@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'platform_widget.dart';
 
 class PlatformAppBar extends PlatformWidget<CupertinoNavigationBar, AppBar> {
-  PlatformAppBar({this.leading, this.title, this.actions});
-  final Widget leading;
-  final Widget title;
+  const PlatformAppBar({super.key, this.leading, this.title, this.actions = const []});
+  final Widget? leading;
+  final Widget? title;
   final List<Widget> actions;
 
   @override
@@ -14,9 +14,9 @@ class PlatformAppBar extends PlatformWidget<CupertinoNavigationBar, AppBar> {
       leading: leading,
       middle: title,
       trailing: Row(
-        children: actions,
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: actions,
       ),
     );
   }

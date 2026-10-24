@@ -1,22 +1,19 @@
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'platform_widget.dart';
 
 class PlatformAlertDialog extends PlatformWidget<CupertinoAlertDialog, AlertDialog> {
-  PlatformAlertDialog({
-    @required this.title,
-    @required this.content,
+  const PlatformAlertDialog({
+    super.key,
+    required this.title,
+    required this.content,
     this.cancelText,
-    @required this.confirmText,
-  })  : assert(title != null),
-        assert(content != null),
-        assert(confirmText != null);
+    required this.confirmText,
+  });
 
   final String title;
   final String content;
-  final String cancelText;
+  final String? cancelText;
   final String confirmText;
 
   @override
@@ -24,8 +21,7 @@ class PlatformAlertDialog extends PlatformWidget<CupertinoAlertDialog, AlertDial
     return AlertDialog(
       title: Text(title),
       content: Text(content),
-      actions: _actions(
-          context, cancelText?.toUpperCase(), confirmText.toUpperCase()),
+      actions: _actions(context, cancelText, confirmText),
     );
   }
 
@@ -39,7 +35,7 @@ class PlatformAlertDialog extends PlatformWidget<CupertinoAlertDialog, AlertDial
   }
 
   List<Widget> _actions(
-      BuildContext context, String cancelText, String confirmText) {
+      BuildContext context, String? cancelText, String confirmText) {
     var actions = <Widget>[];
     if (cancelText != null) {
       actions.add(PlatformAlertDialogAction(
@@ -57,13 +53,13 @@ class PlatformAlertDialog extends PlatformWidget<CupertinoAlertDialog, AlertDial
   Future<bool> show(BuildContext context) async {
     final result = await showDialog<bool>(
       context: context,
-      barrierDismissible: !Platform.isIOS,
+      barrierDismissible: !PlatformWidget.isCupertino(context),
       builder: (context) => this,
     );
     // showDialog returns null if the dialog has been dismissed with the back
     // button on Android.
     // here we ensure that we return only true or false
-    return Future.value(result ?? false);
+    return result ?? false;
   }
 
   void _dismiss(BuildContext context, bool value) {
@@ -71,24 +67,24 @@ class PlatformAlertDialog extends PlatformWidget<CupertinoAlertDialog, AlertDial
   }
 }
 
-class PlatformAlertDialogAction extends PlatformWidget<CupertinoDialogAction, FlatButton> {
-  PlatformAlertDialogAction({this.child, this.onPressed});
+class PlatformAlertDialogAction extends PlatformWidget<CupertinoDialogAction, TextButton> {
+  const PlatformAlertDialogAction({super.key, required this.child, this.onPressed});
   final Widget child;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   @override
-  FlatButton buildMaterialWidget(BuildContext context) {
-    return FlatButton(
-      child: child,
+  TextButton buildMaterialWidget(BuildContext context) {
+    return TextButton(
       onPressed: onPressed,
+      child: child,
     );
   }
 
   @override
   CupertinoDialogAction buildCupertinoWidget(BuildContext context) {
     return CupertinoDialogAction(
-      child: child,
       onPressed: onPressed,
+      child: child,
     );
   }
 }
